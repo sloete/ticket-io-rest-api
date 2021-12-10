@@ -12,6 +12,10 @@ Baue eine API um folgende Informationen anzuzeigen und zu speichern:
 Die Daten müssen nicht in einer Datenbank, sondern können zur Laufzeit gespeichert werden.
 
 ## Routes exposed by this service
+### Postman
+The `TicketIo.postman_collection.json` file can be used to import a collection with all available routes into postman.
+
+
 ### Events
 
 | Method | Path | Description | Body |
