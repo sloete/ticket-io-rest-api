@@ -23,21 +23,13 @@ export class EventsService {
   }
 
   findOne(id: string) {
-    const event = this.events.find((event) => event.id === id);
-
-    if (!event) {
-      throw new NotFoundException(`Event ${id} not found.`);
-    }
+    const event = this.findEventByIdOrFail(id);
 
     return { ...event };
   }
 
   update(id: string, updateEventDto: UpdateEventDto) {
-    const event = this.events.find((event) => event.id === id);
-
-    if (!event) {
-      throw new NotFoundException(`Event ${id} not found.`);
-    }
+    const event = this.findEventByIdOrFail(id);
 
     for (const key in updateEventDto) {
       if (updateEventDto[key]) {
@@ -49,12 +41,18 @@ export class EventsService {
   }
 
   remove(id: string) {
+    this.findEventByIdOrFail(id);
+
+    this.events = this.events.filter((event) => event.id !== id);
+  }
+
+  private findEventByIdOrFail(id: string) {
     const event = this.events.find((event) => event.id === id);
 
     if (!event) {
       throw new NotFoundException(`Event ${id} not found.`);
     }
 
-    this.events = this.events.filter((event) => event.id !== id);
+    return event;
   }
 }
