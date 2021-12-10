@@ -1,30 +1,43 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+## Task
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Baue eine API um folgende Informationen anzuzeigen und zu speichern:
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- eventTitle
+- eventDate
+- eventCity
+- tickets[].barcode (alphanummerisch, acht Stellen maximal)
+- tickets[].firstName
+- tickets[].lastName
+
+Die Daten müssen nicht in einer Datenbank, sondern können zur Laufzeit gespeichert werden.
+
+## Routes exposed by this service
+### Events
+
+| Method | Path | Description | Body |
+|-----|------|------|------|
+| GET | /events | Get's a list of all available events. |
+| GET | /events/{id} | Retrieves a specific event by the given id. <br />*Returns 404 if event does not exist.* |
+| POST | /events | Creates a new event. | **Required fields:**<br />title: *string*<br />date: *Date*<br />city: *string* |
+| Patch | /events | Updates an existing event with the given fields. <br />*Returns 404 if event does not exist.* | **Possible fields** <br />title: *string*<br />date: *Date*<br />city: *string* |
+| DELETE | /events/{id} | Deletes a specific event by the given id. |
+
+
+### Tickets
+
+| Method| Path | Description | Body |
+|-----|------|------|------|
+| GET | /tickets | Get's a list of all available tickets.
+| GET | /tickets/{id} | Retrieves a specific ticket by the given id. <br />*Returns 404 if ticket does not exist.*
+| POST | /tickets | Creates a new ticket associated with an existing event. <br />*Returns 404 if given eventId is not existent.* | **Required fields:**<br />eventId: *string*<br />barcode: *string*<br />firstName: *string*<br />lastName: *string*
+| Patch | /tickets | Updates an existing event with the given fields. <br />*Returns 404 if ticket does not exist.* | **Possible fields** <br />eventId: *string*<br />barcode: *string*<br />firstName: *string*<br />lastName: *string*
+| DELETE | /tickets/{id} | Deletes a specific ticket by the given id.
+
+
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Build with [Nest](https://github.com/nestjs/nest).
 
 ## Installation
 
@@ -57,17 +70,3 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
