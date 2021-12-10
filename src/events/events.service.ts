@@ -49,6 +49,12 @@ export class EventsService {
   }
 
   remove(id: string) {
-    return `This action removes a #${id} event`;
+    const event = this.events.find((event) => event.id === id);
+
+    if (!event) {
+      throw new NotFoundException(`Event ${id} not found.`);
+    }
+
+    this.events = this.events.filter((event) => event.id !== id);
   }
 }
