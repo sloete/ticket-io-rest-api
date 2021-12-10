@@ -9,7 +9,6 @@ export class EventsService {
 
   create(createEventDto: CreateEventDto): Event {
     const newEvent = new Event(
-      Math.random().toString(),
       createEventDto.title,
       createEventDto.date,
       createEventDto.city,

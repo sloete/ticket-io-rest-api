@@ -1,8 +1,9 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export class Event {
-  constructor(
-    public id: string,
-    public title: string,
-    public date: Date,
-    public city: string,
-  ) {}
+  id: string;
+
+  constructor(public title: string, public date: Date, public city: string) {
+    this.id = uuidv4();
+  }
 }
