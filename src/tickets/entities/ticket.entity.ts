@@ -4,6 +4,7 @@ export class Ticket {
   id: string;
 
   constructor(
+    public eventId: string,
     public barcode: string,
     public firstName: string,
     public lastName: string,

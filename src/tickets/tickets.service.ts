@@ -2,14 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { Ticket } from './entities/ticket.entity';
-import { Event } from '../events/entities/event.entity';
+import { EventsService } from '../events/events.service';
 
 @Injectable()
 export class TicketsService {
   private tickets: Ticket[] = [];
 
+  constructor(private readonly eventsService: EventsService) {}
+
   create(createTicketDto: CreateTicketDto) {
+    this.eventsService.findOne(createTicketDto.eventId);
+
     const newTicket = new Ticket(
+      createTicketDto.eventId,
       createTicketDto.barcode,
       createTicketDto.firstName,
       createTicketDto.lastName,
