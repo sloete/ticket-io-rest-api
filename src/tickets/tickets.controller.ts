@@ -10,13 +10,19 @@ import {
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { EventsService } from '../events/events.service';
 
 @Controller('tickets')
 export class TicketsController {
-  constructor(private readonly ticketsService: TicketsService) {}
+  constructor(
+    private readonly ticketsService: TicketsService,
+    private readonly eventsService: EventsService,
+  ) {}
 
   @Post()
   create(@Body() createTicketDto: CreateTicketDto) {
+    this.eventsService.findOne(createTicketDto.eventId);
+
     return this.ticketsService.create(createTicketDto);
   }
 
