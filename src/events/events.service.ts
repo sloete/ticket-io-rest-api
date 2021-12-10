@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entities/event.entity';
@@ -25,11 +25,27 @@ export class EventsService {
   findOne(id: string) {
     const event = this.events.find((event) => event.id === id);
 
+    if (!event) {
+      throw new NotFoundException(`Event ${id} not found.`);
+    }
+
     return { ...event };
   }
 
   update(id: string, updateEventDto: UpdateEventDto) {
-    return `This action updates a #${id} event`;
+    const event = this.events.find((event) => event.id === id);
+
+    if (!event) {
+      throw new NotFoundException(`Event ${id} not found.`);
+    }
+
+    for (const key in updateEventDto) {
+      if (updateEventDto[key]) {
+        event[key] = updateEventDto[key];
+      }
+    }
+
+    return { ...event };
   }
 
   remove(id: string) {
