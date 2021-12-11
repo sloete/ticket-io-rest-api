@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  main:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+      - "9229:9229"
+    command: npm run start:dev
+    env_file:
+      - .env
+    networks:
+      - webnet
+    depends_on:
+      - mongodb
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    volumes:
+      - db:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+    networks:
+      - webnet
+    restart: always
+networks:
+  webnet:
+volumes:
+  db:

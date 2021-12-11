@@ -6,7 +6,7 @@ COPY package*.json ./
 
 RUN npm install --only=development
 
-COPY .idea .
+COPY . .
 
 RUN npm run build
 
@@ -21,7 +21,7 @@ COPY package*.json ./
 
 RUN npm install --only=production
 
-COPY .idea .
+COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
 
