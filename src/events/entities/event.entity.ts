@@ -1,9 +1,14 @@
-import { v4 as uuid } from 'uuid';
+import * as mongoose from 'mongoose';
 
-export class Event {
+export const EventSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  date: { type: Date, required: true },
+  city: { type: String, required: true },
+});
+
+export interface Event extends mongoose.Document {
   id: string;
-
-  constructor(public title: string, public date: Date, public city: string) {
-    this.id = uuid();
-  }
+  title: string;
+  date: Date;
+  city: string;
 }

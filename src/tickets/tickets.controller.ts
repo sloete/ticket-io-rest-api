@@ -20,8 +20,8 @@ export class TicketsController {
   ) {}
 
   @Post()
-  create(@Body() createTicketDto: CreateTicketDto) {
-    this.eventsService.findOne(createTicketDto.eventId);
+  async create(@Body() createTicketDto: CreateTicketDto) {
+    await this.eventsService.findOne(createTicketDto.eventId);
 
     return this.ticketsService.create(createTicketDto);
   }

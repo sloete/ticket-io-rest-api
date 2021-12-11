@@ -2,34 +2,48 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entities/event.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class EventsService {
-  private events: Event[] = [];
+  constructor(
+    @InjectModel('Event') private readonly eventModel: Model<Event>,
+  ) {}
 
-  create(createEventDto: CreateEventDto): Event {
-    const newEvent = new Event(
-      createEventDto.title,
-      createEventDto.date,
-      createEventDto.city,
-    );
-    this.events.push(newEvent);
-
-    return newEvent;
+  async create(createEventDto: CreateEventDto) {
+    const newEvent = new this.eventModel({
+      title: createEventDto.title,
+      date: createEventDto.date,
+      city: createEventDto.city,
+    });
+    await newEvent.save();
+    return newEvent.id as string;
   }
 
-  findAll(): Event[] {
-    return [...this.events];
+  async findAll() {
+    const events = await this.eventModel.find().exec();
+    return events.map((event) => ({
+      id: event.id,
+      title: event.title,
+      date: event.date,
+      city: event.city,
+    }));
   }
 
-  findOne(id: string) {
-    const event = this.findEventByIdOrFail(id);
+  async findOne(id: string) {
+    const event = await this.findEventByIdOrFail(id);
 
-    return { ...event };
+    return {
+      id: event.id,
+      title: event.title,
+      date: event.date,
+      city: event.city,
+    };
   }
 
-  update(id: string, updateEventDto: UpdateEventDto) {
-    const event = this.findEventByIdOrFail(id);
+  async update(id: string, updateEventDto: UpdateEventDto) {
+    const event = await this.findEventByIdOrFail(id);
 
     for (const key in updateEventDto) {
       if (updateEventDto[key]) {
@@ -37,17 +51,24 @@ export class EventsService {
       }
     }
 
-    return { ...event };
+    return await event.save();
   }
 
-  remove(id: string) {
-    this.findEventByIdOrFail(id);
-
-    this.events = this.events.filter((event) => event.id !== id);
+  async remove(id: string) {
+    const result = await this.eventModel.findByIdAndDelete(id).exec();
+    if (!result) {
+      throw new NotFoundException(`Event ${id} not found.`);
+    }
   }
 
-  private findEventByIdOrFail(id: string) {
-    const event = this.events.find((event) => event.id === id);
+  private async findEventByIdOrFail(id: string): Promise<Event> {
+    let event;
+
+    try {
+      event = await this.eventModel.findById(id);
+    } catch (error) {
+      throw new NotFoundException(`Event ${id} not found.`);
+    }
 
     if (!event) {
       throw new NotFoundException(`Event ${id} not found.`);
